@@ -1,6 +1,6 @@
-FROM haskell:8.8.4 as dev
+FROM haskell:8.10.2 as dev
 
-ENV RESOLVER lts-16.12
+ENV RESOLVER lts-16
 ENV LC_ALL=C.UTF-8
 
 RUN stack setup --resolver=$RESOLVER && stack install --resolver=$RESOLVER \
@@ -15,9 +15,9 @@ RUN stack setup --resolver=$RESOLVER && stack install --resolver=$RESOLVER \
 
 FROM debian:stable-slim
 
-MAINTAINER Dmitry Astapov <dastapov@gmail.com>
+LABEL maintainer Dmitry Astapov <dastapov@gmail.com>
 
-RUN apt-get update && apt-get install --yes libgmp10 libtinfo6 sudo && rm -rf /var/lib/apt/lists
+RUN apt-get update && apt-get install --no-install-recommends --yes libgmp10=2:6.1.2+dfsg-4 libtinfo6=6.1+20181013-2+deb10u2 sudo=1.8.27-1+deb10u2 && rm -rf /var/lib/apt/lists
 RUN adduser --system --ingroup root hledger
 RUN usermod -aG sudo hledger
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
